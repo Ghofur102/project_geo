@@ -10,4 +10,3 @@ Saat ini kita hanya menampilkan Lat/Lng. Buatlah agar aplikasi menampilkan alama
 5. Panggil fungsi getAddressFromLatLng( currentPosition!) di dalam getLocation dan startTracking (di dalam .listen()) setelah setState untuk currentPosition.
 6. Tampilkan currentAddress di UI Anda, di bawah Lat/Lng.
 
-# code awal main.dart
