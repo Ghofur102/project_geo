@@ -20,25 +20,7 @@ Saat ini kita hanya menampilkan Lat/Lng. Buatlah agar aplikasi menampilkan alama
 7. Kemudia perbarui _currentAddress dengan setState, masukkan kombinasi dari place.street (nama jalan), place.locality, place administrativeArea, dan place.country (negara)
 
 Berikut kodenya:
-void getAddressFromLatLng(Position position) async {
-  try {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-     position.latitude,
-     position.longitude,
-    );
-    if (placemarks.isNotEmpty) {
-     Placemark place = placemarks[0];
-     setState(() {
-      _currentAddress =
-      "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
-     });
-    }
-  } catch (e) {
-    setState(() {
-     _errorMessage = "Gagal mendapatkan alamat: $e";
-    });
-  }
-}
+![alt text](image.png)
 
 # Screenshoot Hasil
 ![alt text](c50149d2-d0df-400e-89da-d4119a7d3c64.jpg)
