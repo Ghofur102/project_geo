@@ -43,9 +43,6 @@
         </intent>
     </queries>
 
-    <user-permission android:name="android.permission.ACCESS_FINE_LOCATRION" />
-    <user-permission android:name="android.permission.ACCESS_COARSE_LOCATRION" />
-       <meta-data
-            android:name="com.google.android.geo.AIzaSyDgiMWUXNIxyd3djvBnk6GNRNmQaF05Xqw"
-            android:value="AIzaSyDgiMWUXNIxyd3djvBnk6GNRNmQaF05Xqw" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 </manifest>
