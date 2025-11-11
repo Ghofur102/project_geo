@@ -34,7 +34,12 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<Position>? _positionStream; // Penyimpan stream
 
   // Variabel untuk Latihan 1 dan 2 telah dihapus dari versi ini
-  String? _currentAddress; // Menyimpan alamat (Latihan 2)
+  String? _currentAddress;
+  String? distanceToPNB;
+
+  //koordinat PNB
+  final double _pnbLatitude = -6.895747;
+  final double _pnbLongitude = 107.610149;
 
   @override
   void dispose() {
@@ -106,15 +111,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
     try {
       // Mulai mendengarkan stream
-      _positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSettings,
-      ).listen((Position position) {
-        setState(() {
-          _currentPosition = position;
-          _errorMessage = null;
-        });
-        getAddressFromLatLng(position); // Panggil fungsi untuk mendapatkan alamat
-      });
+      _positionStream =
+          Geolocator.getPositionStream(
+            locationSettings: locationSettings,
+          ).listen((Position position) {
+            setState(() {
+              _currentPosition = position;
+              _errorMessage = null;
+            });
+            getAddressFromLatLng(
+              position,
+            ); // Panggil fungsi untuk mendapatkan alamat
+            getDistanceToPNB(position);
+          });
     } catch (e) {
       setState(() {
         _errorMessage = e.toString();
@@ -128,6 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _errorMessage = "Pelacakan dihentikan.";
     });
   }
+
   void getAddressFromLatLng(Position position) async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -144,6 +154,33 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       setState(() {
         _errorMessage = "Gagal mendapatkan alamat: $e";
+      });
+    }
+  }
+
+  void getDistanceToPNB(Position position) {
+    try {
+      double startLatitude = position.latitude;
+      double startLongitude = position.longitude;
+      double endLatitude = _pnbLatitude;
+      double endLongitude = _pnbLongitude;
+
+      double distanceInMeters = Geolocator.distanceBetween(
+        startLatitude,
+        startLongitude,
+        endLatitude,
+        endLongitude,
+      );
+
+      setState(() {
+        _currentPosition = position;
+        _errorMessage = null;
+        distanceToPNB =
+            "Jarak dari PNB: ${distanceInMeters.toStringAsFixed(2)} m";
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Gagal menghitung jarak: $e";
       });
     }
   }
@@ -173,7 +210,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (_errorMessage != null)
                         Text(
                           _errorMessage!,
-                          style: const TextStyle(color: Colors.red, fontSize: 16),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                          ),
                           textAlign: TextAlign.center,
                         ),
 
@@ -191,14 +231,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
 
                       const SizedBox(height: 16),
-                      // Tampilkan Alamat (Latihan 2)
                       if (_currentAddress != null)
                         Text(
                           "Alamat: $_currentAddress",
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
+                          style: const TextStyle(fontSize: 16),
+                        ),
+
+                      const SizedBox(height: 16),
+                      if (distanceToPNB != null)
+                        Text(
+                          distanceToPNB!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16),
                         ),
                     ],
                   ),
@@ -216,7 +261,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Tombol Mulai/Hentikan Pelacakan
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
